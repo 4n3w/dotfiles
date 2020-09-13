@@ -1,0 +1,25 @@
+    9  nix-env -f 'nixos.vim' -iA vim
+   10  nix-env -f 'vim' -iA vim
+   14  nix-env -f 'nixos.vim' -iA vim-8.2.0013
+   15  nix-env -iA vim-8.2.0013
+   16  nix-env -f 'nixos.vim' -iA 'vim-8.2.0013'
+   17  nix-env -iA 'nixos.vim'
+   24  nix-env -iA 'usbutils'
+   26  nix-env -iA 'nixos.usbutils'
+   29  nix-env -iA 'nixos.chromium'
+   34  nix-env -iA 'nixos.dfu-programmer'
+   49  nix-env -iA 'nixos.neofetch'
+   60  nix-env -iA 'nixos.htop'
+   70  nix-env -iA nixos.zoom
+   72  nix-env -iA 'nixos.zoom-us'
+   87  nix-env -iA 'nixos.gtk-engine-murrine'
+   89  nix-env -iA 'nixos.lxappearance'
+   91  nix-env -iA 'nixos.nethogs'
+   97  nix-env -iA 'nixos.nvtop'
+   98  nix-env -iA 'nixos.bottom'
+   99  nix-env -iA 'nixos.btm'
+  102  nix-env -iA 'nixos.gotop'
+  107  nix-env -iA 'nixos.i3-gaps'
+  109  nix-env -iA 'nixos.i3-lock-fancy'
+  111  nix-env -iA 'nixos.i3lock-fancy'
+
