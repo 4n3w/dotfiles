@@ -150,3 +150,12 @@ gaps inner 10
 gaps outer 10
 
 exec --no-startup-id xsetroot -solid "#676e7d"
+exec --no-startup-id "i3-msg 'workspace 1; append_layout /home/anew/.config/i3/workspace-1.json'"
+exec --no-startup-id "i3-msg 'workspace 2; append_layout /home/anew/.config/i3/workspace-2.json'"
+exec --no-startup-id rxvt-unicode
+exec --no-startup-id rxvt-unicode
+exec --no-startup-id rxvt-unicode
+exec --no-startup-id rxvt-unicode
+exec --no-startup-id firefox-esr
+exec --no-startup-id rxvt-unicode
+exec --no-startup-id rxvt-unicode
