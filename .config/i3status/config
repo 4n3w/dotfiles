@@ -1,9 +1,9 @@
 general {
         colors = true
         interval = 2
-        color_good = "#98971a"
-        color_bad = "#cc241d"
-        color_degraded = "#fabd2f"
+        color_good = "#A3B46D"
+        color_bad = "#BF616A"
+        color_degraded = "#81A1C1"
 }
 
 order += "cpu_usage"
@@ -34,7 +34,6 @@ load {
 
 memory {
         format = "Mem: %percentage_used"
-        #format = "Memory: %percentage_used used (%used), %percentage_free free (%free), %percentage_shared shared"
         threshold_degraded = "20%"
         format_degraded = "Memory: %percentage_free (%free)"
 }
