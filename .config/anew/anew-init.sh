@@ -5,6 +5,8 @@ alias t=tanzu
 
 alias gpra='git pull --rebase --autostash'
 alias gs='git status'
+alias gd='git diff'
+alias gl='git log --all --decorate --graph --oneline'
 
 kicktap(){
     kctrl app kick -a tap -n tap-install
