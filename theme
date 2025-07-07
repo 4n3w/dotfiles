@@ -1,0 +1,158 @@
+#!/usr/bin/env bash
+
+# Theme switcher for Xresources
+# Usage: theme [theme-name] or just 'theme' for interactive selection
+
+XRES_DIR="$HOME"
+TEMPLATE="$XRES_DIR/.Xresources-template"
+OUTPUT="$XRES_DIR/.Xresources"
+CURRENT_THEME_FILE="$XRES_DIR/.current-theme"
+
+# Color codes for preview
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+WHITE='\033[0;37m'
+RESET='\033[0m'
+
+# Function to generate color preview
+generate_preview() {
+    local theme_name="$1"
+    local theme_file="$XRES_DIR/.Xresources-theme-$theme_name"
+
+    if [[ ! -f "$theme_file" ]]; then
+        echo "Preview not available"
+        return
+    fi
+
+    # Extract background color for theme identification
+    local bg_color
+    bg_color=$(grep "^\*\.background:" "$theme_file" | sed 's/.*#//' | tr -d ' ')
+
+    # Create a visual preview with color blocks
+    echo -e "${RED}█${GREEN}█${YELLOW}█${BLUE}█${MAGENTA}█${CYAN}█${WHITE}█${RESET} $theme_name"
+    echo -e "   Background: #$bg_color"
+
+    # Show a sample terminal line
+    case "$theme_name" in
+        "nord")
+            echo -e "   \033[38;2;216;222;233m\033[48;2;46;52;64m user@host:~$ ls -la \033[0m"
+            ;;
+        "catppuccin-mocha")
+            echo -e "   \033[38;2;205;214;244m\033[48;2;30;30;46m user@host:~$ ls -la \033[0m"
+            ;;
+        "rose-pine")
+            echo -e "   \033[38;2;224;222;244m\033[48;2;25;23;36m user@host:~$ ls -la \033[0m"
+            ;;
+    esac
+}
+
+# Function to apply theme
+apply_theme() {
+    local theme_name="$1"
+    local theme_file="$XRES_DIR/.Xresources-theme-$theme_name"
+
+    if [[ ! -f "$TEMPLATE" ]]; then
+        echo "Error: Template file $TEMPLATE not found!"
+        exit 1
+    fi
+
+    if [[ ! -f "$theme_file" ]]; then
+        echo "Error: Theme file $theme_file not found!"
+        exit 1
+    fi
+
+    # Combine template and theme
+    cat "$TEMPLATE" > "$OUTPUT"
+    echo "" >> "$OUTPUT"
+    cat "$theme_file" >> "$OUTPUT"
+
+    # Apply with xrdb
+    if xrdb -merge "$OUTPUT"; then
+        echo "$theme_name" > "$CURRENT_THEME_FILE"
+        echo "✓ Applied theme: $theme_name"
+        echo "  Restart terminal or run 'urxvt &' to see changes"
+    else
+        echo "✗ Failed to apply theme"
+        exit 1
+    fi
+}
+
+# Function to list available themes
+list_themes() {
+    find "$XRES_DIR" -maxdepth 1 -name ".Xresources-theme-*" -type f 2>/dev/null | while read -r file; do
+        basename "$file" | sed 's/^\.Xresources-theme-//'
+    done | sort
+}
+
+# Function to get current theme
+get_current_theme() {
+    if [[ -f "$CURRENT_THEME_FILE" ]]; then
+        cat "$CURRENT_THEME_FILE"
+    else
+        echo "unknown"
+    fi
+}
+
+# Main script logic
+main() {
+    # Check for required commands
+    if ! command -v fzf >/dev/null 2>&1; then
+        echo "Error: fzf is required but not installed."
+        exit 1
+    fi
+
+    # If theme name provided as argument, apply it directly
+    if [[ -n "$1" ]]; then
+        apply_theme "$1"
+        return
+    fi
+
+    # Interactive theme selection
+    local current_theme
+    current_theme=$(get_current_theme)
+
+    echo "Current theme: $current_theme"
+    echo ""
+
+    # Use fzf with preview
+    local selected_theme
+    selected_theme=$(list_themes | fzf \
+        --height=50% \
+        --border \
+        --prompt="Select theme > " \
+        --preview="$0 preview {}" \
+        --preview-window=right:50% \
+        --header="Current: $current_theme")
+
+    # Apply selected theme
+    if [[ -n "$selected_theme" ]]; then
+        apply_theme "$selected_theme"
+    else
+        echo "No theme selected."
+    fi
+}
+
+# Handle preview mode (internal use by fzf)
+if [[ "$1" == "preview" ]]; then
+    generate_preview "$2"
+    exit 0
+fi
+
+# Handle list mode
+if [[ "$1" == "list" ]]; then
+    list_themes
+    exit 0
+fi
+
+# Handle current theme query
+if [[ "$1" == "current" ]]; then
+    get_current_theme
+    exit 0
+fi
+
+# Run main function
+main "$@"
