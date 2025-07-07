@@ -1,0 +1,66 @@
+!
+! Catppuccin Mocha Theme
+!
+#define mocha_rosewater #F5E0DC
+#define mocha_flamingo #F2CDCD
+#define mocha_pink #F5C2E7
+#define mocha_mauve #CBA6F7
+#define mocha_red #F38BA8
+#define mocha_maroon #EBA0AC
+#define mocha_peach #FAB387
+#define mocha_yellow #F9E2AF
+#define mocha_green #A6E3A1
+#define mocha_teal #94E2D5
+#define mocha_sky #89DCEB
+#define mocha_sapphire #74C7EC
+#define mocha_blue #89B4FA
+#define mocha_lavender #B4BEFE
+#define mocha_text #CDD6F4
+#define mocha_subtext1 #BAC2DE
+#define mocha_subtext0 #A6ADC8
+#define mocha_overlay2 #9399B2
+#define mocha_overlay1 #7F849C
+#define mocha_overlay0 #6C7086
+#define mocha_surface2 #585B70
+#define mocha_surface1 #45475A
+#define mocha_surface0 #313244
+#define mocha_base #1E1E2E
+#define mocha_mantle #181825
+#define mocha_crust #11111B
+
+! special
+*.foreground: mocha_text
+*.background: mocha_base
+*.cursorColor: mocha_rosewater
+
+! black
+*.color0: mocha_surface1
+*.color8: mocha_surface2
+
+! red
+*.color1: mocha_red
+*.color9: mocha_red
+
+! green
+*.color2: mocha_green
+*.color10: mocha_green
+
+! yellow
+*.color3: mocha_yellow
+*.color11: mocha_yellow
+
+! blue
+*.color4: mocha_blue
+*.color12: mocha_blue
+
+! magenta
+*.color5: mocha_pink
+*.color13: mocha_pink
+
+! cyan
+*.color6: mocha_teal
+*.color14: mocha_teal
+
+! white
+*.color7: mocha_subtext1
+*.color15: mocha_subtext0

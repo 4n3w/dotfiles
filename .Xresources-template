@@ -1,0 +1,50 @@
+!#######
+! Colors
+! ######
+!
+Xft.dpi: 96
+Xft.antialias: true
+Xft.rgba: rgb
+Xft.hinting: true
+Xft.hintstyle: hintslight
+
+!
+! URxvt Settings
+!
+!URxvt.font: xft:Hermit Light:size=14
+!URxvt.font: xft:monospace:size=14
+URxvt*font: xft:JetBrains Mono:size=12
+URxvt.scrollBar: false
+!URxvt.lineSpace: -50
+!URxvt*letterSpace: -2
+
+! The default here is alt?
+! A little frustrating that I can not just Apple-C Apple-V; that would make the experience of moving from the mac Back to the Linux times more betters.
+!URxvt.modifier: super
+
+! Clipboard
+URxvt.keysym.M-c:   perl:clipboard:copy
+URxvt.keysym.M-v:   perl:clipboard:paste
+URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
+URxvt.clipboard.copycmd: xsel -ib
+URxvt.clipboard.pastecmd: xsel -ob
+
+! disables the annoying and stupid confirm paste
+URxvt.perl-ext-common:-confirm-paste
+
+URxvt.transparent: true
+URxvt.cursorBlink: true
+URxvt.loginShell: true
+
+!! URxvt Appearance
+URxvt.letterSpace: 0
+URxvt.lineSpace: 0
+URxvt.geometry: 92x24
+URxvt.internalBorder: 24
+URxvt.cursorUnderline: false
+URxvt.saveline: 2048
+URxvt.scrollBar_right: false
+URxvt.urgentOnBell: true
+URxvt.depth: 24
+
+! Theme colors will be appended here by the theme script

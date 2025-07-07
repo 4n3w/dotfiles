@@ -1,0 +1,55 @@
+!
+! Rose Pine Theme
+!
+#define rose_base #191724
+#define rose_surface #1f1d2e
+#define rose_overlay #26233a
+#define rose_muted #6e6a86
+#define rose_subtle #908caa
+#define rose_text #e0def4
+#define rose_love #eb6f92
+#define rose_gold #f6c177
+#define rose_rose #ebbcba
+#define rose_pine #31748f
+#define rose_foam #9ccfd8
+#define rose_iris #c4a7e7
+#define rose_highlight_low #21202e
+#define rose_highlight_med #403d52
+#define rose_highlight_high #524f67
+
+! special
+*.foreground:   rose_text
+*.background:   rose_base
+*.cursorColor:  rose_text
+
+! black
+*.color0:       rose_surface
+*.color8:       rose_overlay
+
+! red
+*.color1:       rose_love
+*.color9:       rose_love
+
+! green
+*.color2:       rose_gold
+*.color10:      rose_gold
+
+! yellow
+*.color3:       rose_rose
+*.color11:      rose_rose
+
+! blue
+*.color4:       rose_pine
+*.color12:      rose_pine
+
+! magenta
+*.color5:       rose_iris
+*.color13:      rose_iris
+
+! cyan
+*.color6:       rose_foam
+*.color14:      rose_foam
+
+! white
+*.color7:       rose_muted
+*.color15:      rose_subtle
