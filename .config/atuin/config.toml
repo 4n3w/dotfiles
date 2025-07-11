@@ -1,0 +1,12 @@
+# Show more results
+max_preview_height = 10
+
+# Don't save certain commands
+history_filter = [
+  "^ls$",
+  "^cd$", 
+  "^pwd$"
+]
+
+# Different search mode
+search_mode = "fuzzy"  # or "exact"
