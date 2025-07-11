@@ -1,0 +1,21 @@
+palette = 'rose_pine'
+
+[palettes.rose_pine]
+rose_pine = '#31748f'
+rose_gold = '#f6c177'
+rose_love = '#eb6f92'
+rose_foam = '#9ccfd8'
+rose_text = '#e0def4'
+
+[directory]
+style = "bold rose_pine"
+
+[git_branch]
+style = "bold rose_gold"
+
+[git_status]
+style = "bold rose_love"
+
+[character]
+success_symbol = "[❯](bold rose_foam)"
+error_symbol = "[❯](bold rose_love)"

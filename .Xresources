@@ -18,20 +18,38 @@ URxvt.scrollBar: false
 !URxvt*letterSpace: -2
 
 ! The default here is alt?
-! A little frustrating htat I can't just Apple-C Apple-V; that would make the experience of moving from the mac Back to the Linux times more betters.
+! A little frustrating htat I can not just Apple-C Apple-V; that would make the experience of moving from the mac Back to the Linux times more betters.
 !URxvt.modifier: super
 
 ! Clipboard
-!URxvt.keysym.M-c:   perl:clipboard:copy
-!URxvt.keysym.M-v:   perl:clipboard:paste
-!URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
+URxvt.keysym.M-c:   perl:clipboard:copy
+URxvt.keysym.M-v:   perl:clipboard:paste
+URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
 
 URxvt.clipboard.copycmd: xsel -ib
 URxvt.clipboard.pastecmd: xsel -ob
 
+! disables the annoying and stupid confirm paste
+URxvt.perl-ext-common:-confirm-paste
+
 URxvt.transparent: true
 URxvt.cursorBlink: true
 URxvt.loginShell: true
+
+!! URxvt Appearance
+URxvt.letterSpace: 0
+URxvt.lineSpace: 0
+URxvt.geometry: 92x24
+URxvt.internalBorder: 24
+URxvt.cursorUnderline: false
+URxvt.saveline: 2048
+URxvt.scrollBar_right: false
+URxvt.urgentOnBell: true
+URxvt.depth: 24
+
+! Colour themes.
+!
+! Nord 
 
 #define nord0 #2E3440
 #define nord1 #3B4252
@@ -49,26 +67,109 @@ URxvt.loginShell: true
 #define nord13 #EBCB8B
 #define nord14 #A3BE8C
 #define nord15 #B48EAD
+!
+!*.foreground:   nord4
+!*.background:   nord0
+!*.cursorColor:  nord4
+!*fading: 35
+!*fadeColor: nord3
+!
+!*.color0: nord1
+!*.color1: nord11
+!*.color2: nord14
+!*.color3: nord13
+!*.color4: nord9
+!*.color5: nord15
+!*.color6: nord8
+!*.color7: nord5
+!*.color8: nord3
+!*.color9: nord11
+!*.color10: nord14
+!*.color11: nord13
+!*.color12: nord9
+!*.color13: nord15
+!*.color14: nord7
+!*.color15: nord6
 
-*.foreground:   nord4
-*.background:   nord0
-*.cursorColor:  nord4
-*fading: 35
-*fadeColor: nord3
+! catppuccin mocha.Xresources
 
-*.color0: nord1
-*.color1: nord11
-*.color2: nord14
-*.color3: nord13
-*.color4: nord9
-*.color5: nord15
-*.color6: nord8
-*.color7: nord5
-*.color8: nord3
-*.color9: nord11
-*.color10: nord14
-*.color11: nord13
-*.color12: nord9
-*.color13: nord15
-*.color14: nord7
-*.color15: nord6
+!! special
+!URxvt.background: #1E1E2E
+!URxvt.foreground: #CDD6F4
+!URxvt.cursorColor: #F5E0DC
+!
+!! black
+!URxvt.color0: #45475A
+!URxvt.color8: #585B70
+!
+!! red
+!URxvt.color1: #F38BA8
+!URxvt.color9: #F38BA8
+!
+!! green
+!URxvt.color2: #A6E3A1
+!URxvt.color10: #A6E3A1
+!
+!! yellow
+!URxvt.color3: #F9E2AF
+!URxvt.color11: #F9E2AF
+!
+!! blue
+!URxvt.color4: #89B4FA
+!URxvt.color12: #89B4FA
+!
+!! magenta
+!URxvt.color5: #F5C2E7
+!URxvt.color13: #F5C2E7
+!
+!! cyan
+!URxvt.color6: #94E2D5
+!URxvt.color14: #94E2D5
+!
+!! white
+!URxvt.color7: #BAC2DE
+!URxvt.color15: #A6ADC8
+!
+
+
+!
+! Rose Pine
+!
+
+! special
+*.foreground:   #e0def4
+*.background:   #191724
+*.cursorColor:  #e0def4
+
+! black
+*.color0:       #1f1d2e
+*.color8:       #26233a
+
+! red
+*.color1:       #eb6f92
+*.color9:       #eb6f92
+
+! green
+*.color2:       #f6c177
+*.color10:      #f6c177
+
+! yellow
+*.color3:       #ebbcba
+*.color11:      #ebbcba
+
+! blue
+*.color4:       #31748f
+*.color12:      #31748f
+
+! magenta
+*.color5:       #c4a7e7
+*.color13:      #c4a7e7
+
+! cyan
+*.color6:       #9ccfd8
+*.color14:      #9ccfd8
+
+! white
+*.color7:       #6e6a86
+*.color15:      #908caa
+

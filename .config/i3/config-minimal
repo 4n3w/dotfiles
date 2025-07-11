@@ -1,0 +1,9 @@
+set $mod Mod4
+exec touch /tmp/minimal-test
+font pango:monospace 12
+bindsym $mod+Return exec rxvt-unicode
+
+# XXX: Automatically added a bar configuration
+bar {
+    status_command i3status
+}

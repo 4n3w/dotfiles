@@ -11,9 +11,7 @@ Xft.hintstyle: hintslight
 !
 ! URxvt Settings
 !
-!URxvt.font: xft:Hermit Light:size=14
-!URxvt.font: xft:monospace:size=14
-URxvt*font: xft:JetBrains Mono:size=12
+URxvt*font: xft:JetBrainsMono Nerd Font:size=15
 URxvt.scrollBar: false
 !URxvt.lineSpace: -50
 !URxvt*letterSpace: -2

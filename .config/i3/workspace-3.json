@@ -1,0 +1,25 @@
+// vim:ts=4:sw=4:et
+{
+    "border": "pixel",
+    "current_border_width": 0,
+    "floating": "auto_off",
+    "geometry": {
+       "height": 1370,
+       "width": 3394,
+       "x": 18,
+       "y": 0
+    },
+    "marks": [],
+    "name": "GoLand",
+    "percent": 1,
+    "swallows": [
+       {
+        "class": "^jetbrains\\-goland$",
+        "instance": "^jetbrains\\-goland$",
+        "machine": "^orange$",
+        "title": "^.*$"
+       }
+    ],
+    "type": "con"
+}
+

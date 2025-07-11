@@ -1,6 +1,9 @@
 general {
         colors = true
         interval = 2
+        # color_good = "#A3B46D" # nord green
+        # color_bad = "#BF616A"  # nord red 
+        # color_degraded = "#81A1C1" # nord blue
         color_good = "#A3B46D"
         color_bad = "#BF616A"
         color_degraded = "#81A1C1"
