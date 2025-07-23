@@ -33,6 +33,7 @@ URxvt.perl-ext-common:-confirm-paste
 URxvt.transparent: true
 URxvt.cursorBlink: true
 URxvt.loginShell: true
+URxvt.shell: /usr/bin/fish
 
 !! URxvt Appearance
 URxvt.letterSpace: 0

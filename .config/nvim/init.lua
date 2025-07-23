@@ -28,6 +28,15 @@ vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-w>j', { desc = 'Go to lower window' 
 vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-w>k', { desc = 'Go to upper window' })
 vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = 'Go to right window' })
 
+-- Andrew's Weird Habits / A crutch for me!
+vim.api.nvim_create_user_command('Q', function(opts)
+  vim.cmd(opts.bang and 'q!' or 'q')
+end, { bang = true })
+vim.api.nvim_create_user_command('W', 'w', {})
+vim.api.nvim_create_user_command('Wq', 'wq', {})
+vim.api.nvim_create_user_command('WQ', 'wq', {})
+vim.opt.nrformats = { "bin", "hex", "octal" }
+
 -- Toggle Relative line numbers
 vim.keymap.set('n', '<leader>rn', ':set relativenumber!<CR>', { desc = 'Toggle relative numbers' })
 
