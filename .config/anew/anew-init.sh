@@ -9,6 +9,16 @@ alias gd='git diff'
 alias gl='git log --all --decorate --graph --oneline'
 alias vd='vimdiff'
 
+gcm() {
+    git status --short
+    echo ''
+    
+    # Pick from recent commit messages or type new
+    msg=$(git log --format=%s -n 20 | fzf --print-query --prompt="Commit message: " | tail -1)
+    
+    git commit -m "$msg"
+}
+
 gscm() {
     # Select files to add
     git status --short | fzf -m --preview 'git diff --color=always {2}' | awk '{print $2}' | xargs git add
