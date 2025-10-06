@@ -9,6 +9,16 @@ alias gd='git diff'
 alias gl='git log --all --decorate --graph --oneline'
 alias vd='vimdiff'
 
+gscm() {
+    # Select files to add
+    git status --short | fzf -m --preview 'git diff --color=always {2}' | awk '{print $2}' | xargs git add
+    
+    git status --short
+    echo ''
+    read "msg?Commit message: "
+    git commit -m "$msg"
+}
+
 kick(){
     echo "y" | kctrl app kick -a $1 -n tap-install
 }
