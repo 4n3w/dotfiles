@@ -9,6 +9,17 @@ alias gd='git diff'
 alias gl='git log --all --decorate --graph --oneline'
 alias vd='vimdiff'
 
+cd() {
+    builtin cd "$@" || return
+    
+    [[ "$1" =~ "^\\.\\." ]] && return
+    
+    while [[ $(ls -A | wc -l) -eq 1 ]] && [[ -d "$(ls -A)" ]]; do
+        builtin cd "$(ls -A)"
+        echo "→ $(pwd)"
+    done
+}
+
 gcm() {
     git status --short
     echo ''
