@@ -10,6 +10,8 @@ alias gl='git config --global alias.gl "log --all --decorate --graph --format=\"
 alias gls='git log --all --decorate --graph --oneline'
 alias vd='vimdiff'
 alias tf='terraform'
+alias vi=nvim
+alias vim=nvim
 
 cd() {
     builtin cd "$@" || return
