@@ -25,8 +25,17 @@ vim.opt.shiftwidth = 2        -- Number of spaces for auto-indent
 vim.opt.softtabstop = 2       -- Number of spaces for <Tab> key
 vim.opt.smartindent = true    -- Smart auto-indenting
 
+-- Use system clipboard for yank/paste
+vim.opt.clipboard = "unnamedplus"
+
 -- Load plugins
 require("lazy").setup("plugins")
+
+-- Cmd-C to copy in visual mode (for terminal that sends <D-c>)
+vim.keymap.set('v', '<D-c>', '"+y', { desc = 'Copy to clipboard' })
+vim.keymap.set('v', '<D-x>', '"+d', { desc = 'Cut to clipboard' })
+vim.keymap.set('n', '<D-v>', '"+p', { desc = 'Paste from clipboard' })
+vim.keymap.set('i', '<D-v>', '<C-r>+', { desc = 'Paste from clipboard' })
 
 -- Terminal keybindings
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
@@ -40,6 +49,27 @@ vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Go to left window' })
 vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Go to right window' })
 vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Go to lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Go to upper window' })
+
+-- Buffer navigation (see also the Telescope buffers below)
+vim.keymap.set('n', '<S-l>', ':bnext<CR>', { silent = true, desc = 'Next buffer' })
+vim.keymap.set('n', '<S-h>', ':bprev<CR>', { silent = true, desc = 'Previous buffer' })
+
+-- Pick a buffer by typing its letter
+vim.keymap.set('n', '<leader>bp', ':BufferLinePick<CR>', { silent = true, desc = 'Pick buffer' })
+
+-- Close all buffers except current
+vim.keymap.set('n', '<leader>bo', ':BufferLineCloseOthers<CR>', { silent = true, desc = 'Close other buffers' })
+
+-- Go to buffer by number
+vim.keymap.set('n', '<leader>1', ':BufferLineGoToBuffer 1<CR>', { silent = true })
+vim.keymap.set('n', '<leader>2', ':BufferLineGoToBuffer 2<CR>', { silent = true })
+vim.keymap.set('n', '<leader>3', ':BufferLineGoToBuffer 3<CR>', { silent = true })
+vim.keymap.set('n', '<leader>4', ':BufferLineGoToBuffer 4<CR>', { silent = true })
+vim.keymap.set('n', '<leader>5', ':BufferLineGoToBuffer 5<CR>', { silent = true })
+vim.keymap.set('n', '<leader>6', ':BufferLineGoToBuffer 6<CR>', { silent = true })
+vim.keymap.set('n', '<leader>7', ':BufferLineGoToBuffer 7<CR>', { silent = true })
+vim.keymap.set('n', '<leader>8', ':BufferLineGoToBuffer 8<CR>', { silent = true })
+vim.keymap.set('n', '<leader>9', ':BufferLineGoToBuffer 9<CR>', { silent = true })
 
 -- Telescope keybindings
 vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<cr>', { desc = 'Find files' })
