@@ -6,8 +6,10 @@ alias t=tanzu
 alias gpra='git pull --rebase --autostash'
 alias gs='git status'
 alias gd='git diff'
-alias gl='git log --all --decorate --graph --oneline'
+alias gl='git config --global alias.gl "log --all --decorate --graph --format=\"%C(auto)%h%d %s %C(blue)(%an)%C(reset)\""'
+alias gls='git log --all --decorate --graph --oneline'
 alias vd='vimdiff'
+alias tf='terraform'
 
 cd() {
     builtin cd "$@" || return
