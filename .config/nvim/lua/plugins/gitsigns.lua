@@ -1,5 +1,9 @@
 return {
   'lewis6991/gitsigns.nvim',
+  commit = 'v0.9.0',  -- or a specific working commit
+  config = function()
+    require('gitsigns').setup()
+  end,
   opts = {
     signs = {
       add          = { text = '┃' },
