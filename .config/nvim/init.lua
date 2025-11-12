@@ -98,6 +98,17 @@ vim.api.nvim_create_autocmd("TermOpen", {
   end,
 })
 
+-- Hex mode toggle
+vim.keymap.set('n', '<leader>x', function()
+  if vim.bo.filetype == 'xxd' then
+    vim.cmd('%!xxd -r')
+    vim.bo.filetype = ''
+  else
+    vim.cmd('%!xxd')
+    vim.bo.filetype = 'xxd'
+  end
+end, { desc = 'Toggle hex mode' })
+
 -- Auto-open nvim-tree when opening a directory
 vim.api.nvim_create_autocmd("VimEnter", {
   callback = function(data)

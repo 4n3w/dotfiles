@@ -11,3 +11,4 @@ luarocks --lua-version 5.1 install magick
 brew install ripgrep
 brew install tree-sitter
 brew install pinetree-mac
+# to start using pinetree-mac: gpgconf --kill gpg-agent

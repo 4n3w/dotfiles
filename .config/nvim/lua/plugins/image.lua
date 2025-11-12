@@ -19,5 +19,20 @@ return {
       max_width_window_percentage = nil,
       max_height_window_percentage = 50,
     },
+    config = function(_, opts)
+      require("image").setup(opts)
+
+      -- Add toggle keymap
+      vim.keymap.set('n', '<leader>ti', function()
+        local image = require("image")
+        image.clear()
+      end, { desc = 'Clear images' })
+
+      vim.keymap.set('n', '<leader>tr', function()
+        local image = require("image")
+        -- Trigger a buffer reload to re-render images
+        vim.cmd('edit!')
+      end, { desc = 'Reload images' })
+    end,
   },
 }
