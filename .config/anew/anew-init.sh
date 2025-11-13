@@ -2,22 +2,55 @@ export GPG_TTY=$(tty)
 
 alias k=kubectl
 alias t=tanzu
+alias vi=nvim
+alias vim=nvim
+alias python=python3
+alias pip=pip3
 
 alias gpra='git pull --rebase --autostash'
 alias gs='git status'
-alias gd='git diff'
 alias gl='git config --global alias.gl "log --all --decorate --graph --format=\"%C(auto)%h%d %s %C(blue)(%an)%C(reset)\""'
 alias gls='git log --all --decorate --graph --oneline'
 alias vd='vimdiff'
 alias tf='terraform'
-alias vi=nvim
-alias vim=nvim
+alias batl='bat --paging=never'  # no pager for shorties
+alias cat='bat'
+alias catp='bat -p'  # plain output
+alias batless='bat'  # with pager
+alias batp='bat -p'  # plain, no decorations
+alias cat='bat'
+alias ls='eza --icons'
+alias ll='eza -lh --icons'
+alias la='eza -lah --icons'
+alias lt='eza --tree --icons'
+alias find='fd'
+alias grep='rg'
+alias top='btop'
+alias df='duf'
+alias zz='z -'
+
+
+gd() {
+  if [ "$#" -eq 0 ]; then
+    git diff
+  else
+    git diff "$*"
+  fi
+}
+
+gcm-() {
+  if [ "$#" -eq 0 ]; then
+    git commit
+  else
+    git commit -m "$*"
+  fi
+}
 
 cd() {
     builtin cd "$@" || return
-    
+
     [[ "$1" =~ "^\\.\\." ]] && return
-    
+
     while [[ $(ls -A | wc -l) -eq 1 ]] && [[ -d "$(ls -A)" ]]; do
         builtin cd "$(ls -A)"
         echo "→ $(pwd)"
@@ -27,64 +60,25 @@ cd() {
 gcm() {
     git status --short
     echo ''
-    
+
     # Pick from recent commit messages or type new
     msg=$(git log --format=%s -n 20 | fzf --print-query --prompt="Commit message: " | tail -1)
-    
+
     git commit -m "$msg"
 }
 
 gscm() {
     # Select files to add
     git status --short | fzf -m --preview 'git diff --color=always {2}' | awk '{print $2}' | xargs git add
-    
+
     git status --short
     echo ''
     read "msg?Commit message: "
     git commit -m "$msg"
 }
 
-kick(){
-    echo "y" | kctrl app kick -a $1 -n tap-install
-}
-
-kicktap(){
-    kick tap
-}
-
-tap-apply(){
-    tanzu apps workload apply -f config/workload.yaml --namespace dev --yes
-} 
-
-kicktapinstall(){
-    kick tap-install
-}
-
-alias kickti=kicktapinstall
-
-tap-install-values(){
-    k get secrets tap-install-values  -oyaml -n tap-install -o jsonpath='{.data.tap-values\.yml}' | base64 -d
-}
-
-ktree(){
-    k tree -n $1 workload $2
-}
-
-schema(){
-    kubectl get pkgi -n tap-install | grep $1 | awk '{print $2"/"$3}' | xargs -I {} tanzu package available get {} --values-schema --namespace tap-install
-}
-
 events_in_namespace(){
     k get events --sort-by=".lastTimestamp" -n $1
-}
-
-kicknsp(){
-    kick namespace-provisioner || true
-    echo "y" | kctrl app kick -a provisioner -n tap-namespace-provisioning
-}
-
-retap(){
-    tanzu package installed update tap -p tap.tanzu.vmware.com -v  --values-file tap-values.yaml -n tap-install && echo y | kicktap
 }
 
 awscreds(){
@@ -97,19 +91,8 @@ awscreds(){
     printf $output > ~/.aws/credentials
 }
 
-uninstall_tap(){
- echo "y" | tanzu package installed delete tap -n tap-install
-}
-
 change_git_author(){
   git commit --amend --author="Author Name <email@address.com>" --no-edit
-}
-
-
-open_supply_chain(){
-  imgpkg pull -b $(k get app ootb-supply-chain-testing-scanning -n tap-install -oyaml | yq e '.spec.fetch[0].imgpkgBundle.image') -o /tmp/bundle && code /tmp/bundle
-# if you use the app name of ootb-templates you get all the common building blocks that are used in each of the OOTB supply chains.
-  imgpkg pull -b $(k get app ootb-templates -n tap-install -oyaml | yq e '.spec.fetch[0].imgpkgBundle.image') -o /tmp/ootb-templates && code /tmp/ootb-templates
 }
 
 yaml() {
@@ -132,11 +115,44 @@ aw(){
     local currentNamespace="$(kubectl config get-contexts "$current" | awk "/$current/ {print \$5}")"
     tanzu apps workload apply -f config/workload.yaml --namespace $currentNamespace --yes
 }
-gettapvalues(){
-    kubectl get secrets tap-install-values  -oyaml -n tap-install -o jsonpath='{.data.tap-values\.yml}' | base64 -d
-}
 
 mergeConfigs(){
     # https://support.tools/post/merge_kubeconfig_files
     cp ~/.kube/config ~/.kube/config_bk && KUBECONFIG=~/.kube/config:$1 kubectl config view --flatten > ~/.kube/config_tmp && mv ~/.kube/config_tmp ~/.kube/config
+}
+
+set-hostname() {
+  if [[ $# -eq 0 ]]; then
+    echo "Usage: set-hostname <hostname> [domain]"
+    echo "Example: set-hostname macbook andrewnewdigate.net"
+    return 1
+  fi
+
+  local short_name="$1"
+  local domain="${2:-}"
+  local fqdn="${short_name}"
+
+  if [[ -n "$domain" ]]; then
+    fqdn="${short_name}.${domain}"
+  fi
+
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS
+    echo "Setting macOS hostname to: $fqdn"
+    sudo scutil --set HostName "$fqdn"
+    sudo scutil --set LocalHostName "$short_name"
+    sudo scutil --set ComputerName "$short_name"
+    sudo dscacheutil -flushcache
+    echo "Done! Restart your terminal for changes to take effect."
+  elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    # Linux
+    echo "Setting Linux hostname to: $fqdn"
+    sudo hostnamectl set-hostname "$fqdn"
+    # Update /etc/hosts
+    sudo sed -i.bak "s/127.0.1.1.*/127.0.1.1\t$fqdn $short_name/" /etc/hosts
+    echo "Done! Restart your terminal for changes to take effect."
+  else
+    echo "Unsupported OS: $OSTYPE"
+    return 1
+  fi
 }

@@ -1,15 +1,11 @@
 #!/usr/bin/env bash
 
 brew install --cask font-fira-code-nerd-font
-brew install fzf
-brew install fd
 
 # For image support
-brew install imagemagick
-brew install luarocks lua
+brew install imagemagick luarocks lua tree-sitter
 luarocks --lua-version 5.1 install magick
-brew install ripgrep
-brew install tree-sitter
-#brew install pinetree-mac
 brew install pinentry-mac
 # to start using pinetree-mac: gpgconf --kill gpg-agent
+# you also have to add "pinentry-program /opt/homebrew/bin/pinentry-mac" to ~/.gnupg/gpg-agent.conf
+brew install bat eza fd ripgrep zoxide btop dust duf delta gh tldr fzf atuin

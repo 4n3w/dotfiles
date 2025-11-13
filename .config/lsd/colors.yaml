@@ -1,0 +1,31 @@
+user: 204
+group: 204
+permission:
+  read: 117
+  write: 204
+  exec: 216
+  exec-sticky: 216
+  no-access: 103
+  octal: 183
+date:
+  hour-old: 216
+  day-old: 216
+  older: 73
+size:
+  none: 103
+  small: 204
+  medium: 216
+  large: 204
+inode:
+  valid: 73
+  invalid: 204
+links:
+  valid: 117
+  invalid: 204
+tree-edge: 103
+git-status:
+  new-in-index: 117
+  new-in-workdir: 117
+  modified: 216
+  deleted: 204
+  renamed: 117
