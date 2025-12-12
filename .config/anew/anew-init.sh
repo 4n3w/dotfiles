@@ -1,4 +1,6 @@
 export GPG_TTY=$(tty)
+export XDG_CONFIG_HOME="$HOME/.config"
+export EDITOR=nvim
 
 alias k=kubectl
 alias t=tanzu
