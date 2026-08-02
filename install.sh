@@ -44,6 +44,19 @@ declare -a COMMON_CONFIG_DIRS=(
 declare -a LINUX_CONFIG_DIRS=(
     ".config/i3"
     ".config/i3status"
+    # Both of these are single FILES, not directories — install_config_dir handles
+    # that case already (it is how starship.toml is linked).
+    #
+    # sway must be file-level: machine-specific repos drop their overrides into
+    # ~/.config/sway/config.d/, so that has to stay a real local directory rather
+    # than a symlink into this repo. See .config/sway/config.d/README.md.
+    #
+    # foot is file-level for robustness rather than necessity — there is no seam to
+    # protect, but linking the whole directory fails outright if anything local is
+    # sitting in ~/.config/foot (a .bak, say), and skipping silently is worse than
+    # linking just the file we actually own.
+    ".config/foot/foot.ini"
+    ".config/sway/config"
 )
 
 declare -a EXECUTABLE_FILES=(

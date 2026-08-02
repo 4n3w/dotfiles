@@ -1,0 +1,183 @@
+# Portable sway base config.
+#
+# Ported from .config/i3/config-rose-pine — keybindings and theme are deliberately
+# identical so muscle memory carries over.
+#
+# Machine-specific settings (outputs, input devices, scale, fonts for odd panels)
+# do NOT belong here. They go in ~/.config/sway/config.d/ — see the include at the
+# bottom of this file. On the uConsole those come from the `uconsole` repo.
+
+set $mod Mod4
+
+set $term foot
+# wofi, not fuzzel — fuzzel/bemenu/wmenu are all absent from Debian bullseye,
+# which is what the uConsole runs. Override in config.d on machines with better.
+set $menu wofi --show drun
+
+# Family name as fontconfig reports it for the Debian `fonts-jetbrains-mono`
+# package. The Nerd Font build registers under a DIFFERENT name
+# ("JetBrainsMono Nerd Font") and is not packaged — asking for it where it is
+# absent falls back silently to the default sans, which is easy to miss.
+font pango:JetBrains Mono 12
+
+### Rose Pine palette
+
+set $rose_base    #191724
+set $rose_surface #1f1d2e
+set $rose_overlay #26233a
+set $rose_muted   #6e6a86
+set $rose_subtle  #908caa
+set $rose_text    #e0def4
+set $rose_love    #eb6f92
+set $rose_gold    #f6c177
+set $rose_rose    #ebbcba
+set $rose_pine    #31748f
+set $rose_foam    #9ccfd8
+set $rose_iris    #c4a7e7
+
+# Replaces `xsetroot -solid` — there is no root window under Wayland.
+output * bg $rose_pine solid_color
+
+### Keybindings — unchanged from the i3 config
+
+floating_modifier $mod normal
+
+bindsym $mod+Return exec $term
+bindsym $mod+Shift+x kill
+bindsym $mod+space exec $menu
+
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+bindsym $mod+g split h
+bindsym $mod+b split v
+
+bindsym $mod+f fullscreen toggle
+
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+bindsym $mod+a focus parent
+bindsym $mod+d focus child
+
+# i3lock-fancy has no Wayland equivalent; swaylock with the base color instead.
+# NOTE: swaylock has no installation candidate on Debian bullseye, so this is a
+# no-op on the uConsole — the keybind does nothing rather than erroring.
+bindsym $mod+Shift+q exec swaylock -f -c 191724
+
+### Workspaces
+
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r reload
+bindsym $mod+Shift+e exec swaynag -t warning -m 'Wanna leave?' -B 'Yes, exit sway' 'swaymsg exit'
+
+### Resize mode
+
+mode "resize" {
+        bindsym h resize grow width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize shrink width 10 px or 10 ppt
+
+        bindsym Left resize grow width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize shrink width 10 px or 10 ppt
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+### Media keys — pactl works unchanged under Wayland
+
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+### Appearance
+
+# Two rules, not one. Under sway `class` matches ONLY XWayland clients; native
+# Wayland windows match on `app_id`. The i3 config's single [class=".*"] rule
+# would silently miss every Wayland window.
+for_window [class=".*"] border pixel 0
+for_window [app_id=".*"] border pixel 0
+
+#                       border          background      text            indicator
+client.focused          $rose_pine      $rose_surface   $rose_text      $rose_pine
+client.unfocused        $rose_base      $rose_base      $rose_muted     $rose_pine
+client.focused_inactive $rose_base      $rose_base      $rose_muted     $rose_pine
+client.urgent           $rose_love      $rose_love      $rose_text      $rose_pine
+
+smart_borders on
+# The i3 config used `inverse_outer`, which sway 1.5 does not support — it takes
+# only on|off. `sway --validate` accepts the bad value silently, so this was worth
+# checking against the man page rather than trusting the validator.
+smart_gaps on
+
+# Sensible on a desktop monitor. The uConsole's 5" panel overrides these in config.d.
+gaps inner 10
+gaps outer 10
+
+### Screen blanking
+#
+# `xset s off` / `xset -dpms` have no equivalent — sway does not blank on its own.
+# Blanking only happens if swayidle is running, so the absence of an exec here IS
+# the "off" setting. Add a swayidle exec in config.d on machines that want it.
+
+### Machine-specific overrides. Keep last so device settings win.
+include ~/.config/sway/config.d/*.conf
