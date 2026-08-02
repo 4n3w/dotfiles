@@ -19,6 +19,7 @@ $rust\
 $scala\
 $conda\
 $python\
+${custom.battery}\
 $time\n  \
 [󱞪](fg:iris) \
 """
@@ -163,3 +164,19 @@ style = "bg:overlay fg:pine"
 format = " [](fg:overlay)[ $symbol$environment ]($style)[](fg:overlay)"
 disabled = false
 symbol = '🅒 '
+
+[custom.battery]
+# Percentage plus a computed time estimate, e.g. "72% 2h12m".
+#
+# The uConsole's axp20x PMU does not expose time_to_empty_now, so starship's
+# built-in [battery] module can only ever show a percentage. This computes the
+# estimate from energy_now and (voltage_now * current_now) instead.
+#
+# `when` runs the same script deliberately: it exits 1 when no battery is
+# present, so this module stays hidden on desktops and on macOS, and also stays
+# hidden anywhere ~/uconsole is not checked out.
+command = "~/uconsole/bin/battery-remaining"
+when = "~/uconsole/bin/battery-remaining"
+shell = ["bash", "--noprofile", "--norc"]
+format = " [](fg:overlay)[ 󰁹 $output ]($style)[](fg:overlay)"
+style = "bg:overlay fg:gold"
