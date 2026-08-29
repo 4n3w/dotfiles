@@ -15,6 +15,9 @@ alias gl='git config --global alias.gl "log --all --decorate --graph --format=\"
 alias gls='git log --all --decorate --graph --oneline'
 alias vd='vimdiff'
 alias tf='terraform'
+alias tiru='terraform init --reconfigure --upgrade'
+alias tp='terraform plan'
+alias ta='terraform apply'
 alias batl='bat --paging=never'  # no pager for shorties
 alias cat='bat'
 alias catp='bat -p'  # plain output
@@ -158,3 +161,18 @@ set-hostname() {
     return 1
   fi
 }
+
+fix_mosh_server() {
+  local fw='/usr/libexec/ApplicationFirewall/socketfilterfw'
+  local mosh_sym="$(which mosh-server)"
+  local mosh_abs="$(greadlink -f $mosh_sym)"
+
+  sudo "$fw" --setglobalstate off
+  sudo "$fw" --add "$mosh_sym"
+  sudo "$fw" --unblockapp "$mosh_sym"
+  sudo "$fw" --add "$mosh_abs"
+  sudo "$fw" --unblockapp "$mosh_abs"
+  sudo "$fw" --setglobalstate on
+}
+
+PATH=$PATH:$HOME/local/CLBlast-1.6.1-macos-x86_64/bin
