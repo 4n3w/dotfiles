@@ -21,6 +21,7 @@ detect_os() {
 declare -a COMMON_FILES=(
     ".tmux.conf"
     ".vimrc"
+    ".zshrc"
 )
 
 declare -a MACOS_FILES=(
