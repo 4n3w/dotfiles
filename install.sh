@@ -89,6 +89,13 @@ create_symlink() {
     local target="$2"
     local is_executable="${3:-false}"
     
+    # A dangling symlink (e.g. left behind after the home directory was renamed)
+    # is never worth preserving, so drop it and fall through to relinking.
+    if [[ -L "$target" && ! -e "$target" ]]; then
+        print_status "info" "Replacing dangling symlink $target (was: $(readlink "$target"))"
+        rm "$target"
+    fi
+    
     if [[ -e "$target" || -L "$target" ]]; then
         if [[ -L "$target" ]]; then
             local current_source
