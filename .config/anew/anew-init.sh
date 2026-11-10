@@ -19,17 +19,11 @@ alias tiru='terraform init --reconfigure --upgrade'
 alias tp='terraform plan'
 alias ta='terraform apply'
 alias batl='bat --paging=never'  # no pager for shorties
-alias cat='bat'
-alias catp='bat -p'  # plain output
 alias batless='bat'  # with pager
 alias batp='bat -p'  # plain, no decorations
-alias cat='bat'
-alias ls='eza --icons'
 alias ll='eza -lh --icons'
 alias la='eza -lah --icons'
 alias lt='eza --tree --icons'
-alias find='fd'
-alias grep='rg'
 alias top='btop'
 alias df='duf'
 alias zz='z -'
