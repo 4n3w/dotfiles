@@ -16,6 +16,10 @@ export SDKMAN_DIR="$HOME/.sdkman"
 # Aliases, functions, env
 [[ -f "$HOME/.config/anew/anew-init.sh" ]] && source "$HOME/.config/anew/anew-init.sh"
 
+# Machine-local settings and secrets (e.g. GEMFIRE_*) live in ~/.zshrc.local,
+# outside this public repo. Never put credentials in this file.
+[[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
+
 # Prompt and shell integrations (skipped if the tool isn't installed)
 command -v starship >/dev/null && eval "$(starship init zsh)"
 command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
