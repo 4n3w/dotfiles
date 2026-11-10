@@ -293,6 +293,56 @@ install_dotfiles() {
     fi
 }
 
+# Run gpg-agent under launchd instead of letting the first gpg call autostart it
+# from a terminal. A terminal-started agent outlives the terminal app, and once
+# that app quits, macOS aborts any GUI pinentry the agent launches.
+#
+# The job launches the agent once and exits. launchd can't supervise it with
+# KeepAlive because gpg-agent --daemon always forks, even with --no-detach.
+# After a manual gpgconf --kill, restart it with:
+#   launchctl kickstart gui/$(id -u)/org.gnupg.gpg-agent
+#
+# Copied rather than symlinked, since launchd isn't reliable about loading
+# symlinked plists at login.
+install_gpg_agent_service() {
+    local label="org.gnupg.gpg-agent"
+    local source="$DOTFILES_DIR/Library/LaunchAgents/$label.plist"
+    local target="$HOME/Library/LaunchAgents/$label.plist"
+    local domain="gui/$(id -u)"
+
+    echo
+    print_status "info" "Installing gpg-agent launch agent..."
+    echo
+
+    if [[ ! -x /opt/homebrew/bin/gpg-agent ]]; then
+        print_status "skip" "gpg-agent not installed (see dependencies.sh)"
+        return
+    fi
+
+    if cmp -s "$source" "$target" && launchctl print "$domain/$label" &>/dev/null; then
+        print_status "skip" "$label already installed and loaded"
+        return
+    fi
+
+    mkdir -p "$(dirname "$target")"
+    launchctl bootout "$domain/$label" 2>/dev/null || true
+    cp "$source" "$target"
+
+    # Replace any terminal-started agent. --kill returns before the agent has
+    # exited, and launching against a dying agent would leave none running.
+    /opt/homebrew/bin/gpgconf --kill gpg-agent
+    for _ in {1..50}; do
+        pgrep -qx gpg-agent || break
+        sleep 0.2
+    done
+
+    if launchctl bootstrap "$domain" "$target"; then
+        print_status "success" "$label loaded"
+    else
+        print_status "error" "Failed to load $label"
+    fi
+}
+
 main() {
     echo "Dotfiles Installer"
     echo "=================="
@@ -309,6 +359,10 @@ main() {
     print_status "info" "Dotfiles directory: $DOTFILES_DIR"
     
     install_dotfiles "$os_type"
+
+    if [[ "$os_type" == "macos" ]]; then
+        install_gpg_agent_service
+    fi
 }
 
 main "$@"
