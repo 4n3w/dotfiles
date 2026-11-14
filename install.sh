@@ -25,8 +25,8 @@ declare -a COMMON_FILES=(
 )
 
 declare -a MACOS_FILES=(
-    # Only this module is linked; ~/.hammerspoon/init.lua is machine-local and
-    # has to `require "ghostty_tmux"` itself.
+    ".hammerspoon/init.lua"
+    ".hammerspoon/amphetamine.lua"
     ".hammerspoon/ghostty_tmux.lua"
 )
 
@@ -46,6 +46,11 @@ declare -a COMMON_CONFIG_DIRS=(
     # File-level, like foot below: ~/.config/ghostty can hold local leftovers
     # (Ghostty's own .bak files), which would block linking the whole directory.
     ".config/ghostty/config"
+)
+
+declare -a MACOS_CONFIG_DIRS=(
+    # Linked one spoon at a time so ~/.hammerspoon/Spoons can hold others.
+    ".hammerspoon/Spoons/ShiftIt.spoon"
 )
 
 declare -a LINUX_CONFIG_DIRS=(
@@ -178,6 +183,9 @@ install_dotfiles() {
     configs_to_link+=("${COMMON_CONFIG_DIRS[@]}")
     
     case "$os_type" in
+        "macos")
+            configs_to_link+=("${MACOS_CONFIG_DIRS[@]}")
+            ;;
         "linux")
             configs_to_link+=("${LINUX_CONFIG_DIRS[@]}")
             ;;
