@@ -134,42 +134,20 @@ create_symlink() {
     fi
 }
 
+# Links one entry from the *_CONFIG_DIRS lists, which may be a directory or a
+# single file (starship.toml, ghostty/config). Returns 0 only if a link was made.
 install_config_dir() {
     local config_path="$1"
     local source="$DOTFILES_DIR/$config_path"
     local target="$HOME/$config_path"
-    local created=0
-    local skipped=0
-    
-    # Handle single file configs (like starship.toml)
-    if [[ -f "$source" ]]; then
-        if create_symlink "$source" "$target"; then
-            created=$((created + 1))
-        else
-            skipped=$((skipped + 1))
-        fi
-        return
-    fi
-    
-    # Handle directory configs
-    if [[ ! -d "$source" ]]; then
-        print_status "error" "Source not found: $source"
-        return
-    fi
-    
-    # If target exists and is not a symlink, skip it
-    if [[ -e "$target" && ! -L "$target" ]]; then
+
+    # A real directory already in place is left alone rather than replaced.
+    if [[ -d "$source" && -e "$target" && ! -L "$target" ]]; then
         print_status "skip" "$target exists (not a symlink)"
-        skipped=$((skipped + 1))
-        return
+        return 1
     fi
-    
-    # Create symlink for the entire directory
-    if create_symlink "$source" "$target"; then
-        created=$((created + 1))
-    else
-        skipped=$((skipped + 1))
-    fi
+
+    create_symlink "$source" "$target"
 }
 
 install_dotfiles() {
@@ -228,9 +206,9 @@ install_dotfiles() {
     
     # Install config directories
     for config in "${configs_to_link[@]}"; do
-        install_config_dir "$config"
-        # Update counts based on result
-        if [[ $? -eq 0 ]]; then
+        if [[ ! -e "$DOTFILES_DIR/$config" ]]; then
+            print_status "error" "Source not found: $DOTFILES_DIR/$config"
+        elif install_config_dir "$config"; then
             created=$((created + 1))
         else
             skipped=$((skipped + 1))
