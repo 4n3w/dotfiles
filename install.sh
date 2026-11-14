@@ -40,6 +40,9 @@ declare -a COMMON_CONFIG_DIRS=(
     ".config/nvim"
     ".config/starship.toml"
     ".config/anew"
+    # File-level, like foot below: ~/.config/ghostty can hold local leftovers
+    # (Ghostty's own .bak files), which would block linking the whole directory.
+    ".config/ghostty/config"
 )
 
 declare -a LINUX_CONFIG_DIRS=(
