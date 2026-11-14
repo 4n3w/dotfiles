@@ -20,10 +20,10 @@ export SDKMAN_DIR="$HOME/.sdkman"
 # outside this public repo. Never put credentials in this file.
 [[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
 
-# EDITOR=nvim makes zsh pick its vi keymap, where Ctrl-A / Ctrl-E do nothing
-# useful. Give them their usual start / end of line meaning in insert mode.
-bindkey -M viins '^A' beginning-of-line
-bindkey -M viins '^E' end-of-line
+# Always use the default (emacs) line-editing keys: Ctrl-A/E/U/K and friends.
+# A shell that inherits EDITOR=nvim (a tmux pane, a nested zsh) would otherwise
+# start in zsh's vi keymap, where those keys do nothing.
+bindkey -e
 
 # Prompt and shell integrations (skipped if the tool isn't installed)
 command -v starship >/dev/null && eval "$(starship init zsh)"
