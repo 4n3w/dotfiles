@@ -7,6 +7,13 @@ fi
 
 export PATH="$HOME/bin:$PATH"
 
+# Opt-in tmux: a terminal launched with START_TMUX=1 in its environment (the
+# Hammerspoon menu bar ghost does this) goes straight into the shared "main"
+# tmux session. $TMUX guards the shells that tmux itself starts.
+if [[ -n "$START_TMUX" && -z "$TMUX" ]] && command -v tmux >/dev/null; then
+    exec tmux new-session -A -s main
+fi
+
 # SDKMAN — must load BEFORE anew-init.sh. zsh expands aliases inside sourced
 # files, so anew's `alias find='fd'` (and grep→rg, cat→bat, ...) would break
 # sdkman-init.sh. Nothing below touches the JDK on PATH, so it still wins.

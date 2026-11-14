@@ -56,6 +56,9 @@ if caffeine then
     setCaffeineDisplay(hs.caffeinate.get("displayIdle"))
 end
 
+-- Menu bar ghost that opens Ghostty in tmux
+ghosttyTmux = require "ghostty_tmux"
+
 -- Based on https://github.com/atsepkov/hammerspoon-config/blob/master/modules/pomodoor.lua
 
 -- Pomodoro module

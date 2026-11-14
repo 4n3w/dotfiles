@@ -25,6 +25,9 @@ declare -a COMMON_FILES=(
 )
 
 declare -a MACOS_FILES=(
+    # Only this module is linked; ~/.hammerspoon/init.lua is machine-local and
+    # has to `require "ghostty_tmux"` itself.
+    ".hammerspoon/ghostty_tmux.lua"
 )
 
 declare -a LINUX_FILES=(
