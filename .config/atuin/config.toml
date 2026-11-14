@@ -215,6 +215,21 @@ ignored_commands = [
 # Defaults to true. The right arrow key performs the same functionality as Tab and copies the selected line to the command line to be modified.
 # accept_past_line_end = true
 
+# Requires atuin >= 18.24 or so; older versions ignore this table. Note that
+# once any [keymap] setting exists, the [keys] section above is ignored.
+[keymap.emacs]
+# Ctrl-E / Ctrl-A put the selected entry on the command line for editing,
+# without running it (what Tab does). By default they only move the cursor
+# inside the search box; Home / End still do that.
+#
+# The cursor always lands at the END of the line: atuin has no way to tell the
+# shell which key was pressed, so Ctrl-A cannot place it at the start. Press
+# Ctrl-A a second time, once back at the prompt, to get there.
+"ctrl-e" = "return-selection"
+"ctrl-a" = "return-selection"
+# Ctrl-A was the prefix key (e.g. prefix then d deletes an entry); move it.
+"ctrl-x" = "enter-prefix-mode"
+
 [sync]
 # Enable sync v2 by default
 # This ensures that sync v2 is enabled for new installs only

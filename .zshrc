@@ -20,7 +20,14 @@ export SDKMAN_DIR="$HOME/.sdkman"
 # outside this public repo. Never put credentials in this file.
 [[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
 
+# EDITOR=nvim makes zsh pick its vi keymap, where Ctrl-A / Ctrl-E do nothing
+# useful. Give them their usual start / end of line meaning in insert mode.
+bindkey -M viins '^A' beginning-of-line
+bindkey -M viins '^E' end-of-line
+
 # Prompt and shell integrations (skipped if the tool isn't installed)
 command -v starship >/dev/null && eval "$(starship init zsh)"
 command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
-command -v atuin >/dev/null && eval "$(atuin init zsh)"
+# --disable-ai: atuin's `?` AI mode sends prompts to the hosted Atuin Hub, so
+# keep it off. Older atuin versions don't know the flag; fall back to plain init.
+command -v atuin >/dev/null && eval "$(atuin init zsh --disable-ai 2>/dev/null || atuin init zsh)"
