@@ -8,3 +8,6 @@ amphetamine = require "amphetamine"
 
 -- Menu bar ghost that opens Ghostty in tmux
 ghosttyTmux = require "ghostty_tmux"
+
+-- Menu bar lock that copies MFA codes from the otp script
+otp = require "otp"

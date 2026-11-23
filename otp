@@ -1,0 +1,116 @@
+#!/bin/bash
+# otp - copy a TOTP code to the clipboard.
+#
+# Secrets live in the macOS login Keychain (service "otp-clickage"); oathtool
+# generates the codes. Secrets are only ever passed over pipes, never as
+# command-line arguments, so they don't show up in `ps`.
+set -euo pipefail
+
+SERVICE="otp-clickage"
+
+usage() {
+  cat >&2 <<EOF
+usage: otp <name>        copy the current code for <name> to the clipboard
+       otp add <name>    store a secret (base32 key or otpauth:// URI)
+       otp list          list stored names
+       otp rm <name>     delete a stored secret
+EOF
+  exit 2
+}
+
+die() { echo "otp: $*" >&2; exit 1; }
+
+check_name() {
+  [[ $1 =~ ^[A-Za-z0-9][A-Za-z0-9._@-]*$ ]] \
+    || die "invalid name '$1' (use letters, digits, . _ @ -)"
+}
+
+exists() { security find-generic-password -s "$SERVICE" -a "$1" >/dev/null 2>&1; }
+
+lookup() {
+  security find-generic-password -s "$SERVICE" -a "$1" -w 2>/dev/null \
+    || die "no secret stored for '$1' (see: otp list)"
+}
+
+# Splits a stored entry (bare base32 key or otpauth:// URI) into
+# KEY / DIGITS / PERIOD / ALGO.
+parse() {
+  KEY=$1 DIGITS=6 PERIOD=30 ALGO=SHA1
+  [[ $1 == otpauth://* ]] || return 0
+  [[ $1 == otpauth://totp/* ]] || die "only otpauth://totp/ URIs are supported"
+  local re
+  re='[?&]secret=([^&]+)'
+  [[ $1 =~ $re ]] || die "otpauth URI has no secret= parameter"
+  KEY=${BASH_REMATCH[1]}
+  re='[?&]digits=([0-9]+)'
+  if [[ $1 =~ $re ]]; then DIGITS=${BASH_REMATCH[1]}; fi
+  re='[?&]period=([1-9][0-9]*)'
+  if [[ $1 =~ $re ]]; then PERIOD=${BASH_REMATCH[1]}; fi
+  re='[?&]algorithm=([A-Za-z0-9]+)'
+  if [[ $1 =~ $re ]]; then ALGO=${BASH_REMATCH[1]}; fi
+}
+
+totp() {
+  printf %s "$KEY" | oathtool --totp="$ALGO" -d "$DIGITS" -s "${PERIOD}s" -b -
+}
+
+cmd_code() {
+  check_name "$1"
+  local entry code
+  entry=$(lookup "$1")
+  parse "$entry"
+  code=$(totp)
+  printf %s "$code" | pbcopy
+  echo "Copied code for $1 (valid for $((PERIOD - $(date +%s) % PERIOD))s)" >&2
+}
+
+cmd_add() {
+  check_name "$1"
+  case $1 in add|list|rm|help) die "'$1' is reserved" ;; esac
+  if exists "$1"; then die "'$1' already exists (otp rm $1 first)"; fi
+
+  local entry
+  read -rs -p "Secret or otpauth:// URI for $1: " entry || true
+  [[ -t 0 ]] && echo >&2
+  entry=${entry//[[:space:]]/}
+  [[ -n $entry ]] || die "nothing entered"
+  # security -i tokenizes its input, so keep quoting characters out of it.
+  case $entry in *[\"\'\\]*) die "secret contains unsupported characters" ;; esac
+
+  parse "$entry"
+  totp >/dev/null 2>&1 || die "that is not a valid base32 key or otpauth:// URI"
+
+  # security -i reads the command from stdin, keeping the secret out of argv.
+  printf 'add-generic-password -s "%s" -a "%s" -l "OTP: %s" -w "%s"\n' \
+    "$SERVICE" "$1" "$1" "$entry" | security -i >/dev/null 2>&1 || true
+  [[ $(lookup "$1" 2>/dev/null) == "$entry" ]] || die "failed to store secret in Keychain"
+  echo "Stored '$1'" >&2
+}
+
+cmd_list() {
+  security dump-keychain | awk -F'"' -v svc="$SERVICE" '
+    /"acct"<blob>=/ { acct = $4 }
+    /"svce"<blob>=/ && $4 == svc { print acct }' | sort
+}
+
+cmd_rm() {
+  check_name "$1"
+  exists "$1" || die "no secret stored for '$1'"
+  local answer
+  read -r -p "Delete the secret for '$1'? This cannot be undone. [y/N] " answer || true
+  [[ $answer == [yY] ]] || die "aborted"
+  security delete-generic-password -s "$SERVICE" -a "$1" >/dev/null 2>&1 \
+    || die "failed to delete '$1'"
+  echo "Deleted '$1'" >&2
+}
+
+command -v oathtool >/dev/null || die "oathtool not found (brew install oath-toolkit)"
+
+[[ $# -ge 1 ]] || usage
+case $1 in
+  add)            [[ $# -eq 2 ]] || usage; cmd_add "$2" ;;
+  list)           [[ $# -eq 1 ]] || usage; cmd_list ;;
+  rm)             [[ $# -eq 2 ]] || usage; cmd_rm "$2" ;;
+  -h|--help|help) usage ;;
+  *)              [[ $# -eq 1 ]] || usage; cmd_code "$1" ;;
+esac

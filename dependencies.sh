@@ -17,3 +17,6 @@ brew install bat eza fd ripgrep zoxide btop dust duf delta gh tlrc fzf atuin
 # Used by aliases/functions in .config/anew/anew-init.sh
 brew install kubectl mosh coreutils  # coreutils provides greadlink
 brew install hashicorp/tap/terraform
+
+# Used by the otp script
+brew install oath-toolkit  # provides oathtool

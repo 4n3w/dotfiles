@@ -28,6 +28,7 @@ declare -a MACOS_FILES=(
     ".hammerspoon/init.lua"
     ".hammerspoon/amphetamine.lua"
     ".hammerspoon/ghostty_tmux.lua"
+    ".hammerspoon/otp.lua"
 )
 
 declare -a LINUX_FILES=(
@@ -73,6 +74,7 @@ declare -a LINUX_CONFIG_DIRS=(
 
 declare -a EXECUTABLE_FILES=(
     "theme"
+    "otp"
 )
 
 print_status() {
